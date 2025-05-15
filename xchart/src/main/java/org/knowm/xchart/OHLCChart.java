@@ -792,6 +792,44 @@ public class OHLCChart extends Chart<OHLCStyler, OHLCSeries> {
     checkData(seriesName, "Low", lowData);
     checkData(seriesName, "Close", closeData);
 
+    // Check that high values are not less than low values
+    if (highData != null && lowData != null) {
+      for (int i = 0; i < highData.length; i++) {
+        if (highData[i] < lowData[i]) {
+          throw new IllegalArgumentException(
+              "High value cannot be less than Low value at index "
+                  + i
+                  + " for series "
+                  + seriesName);
+        }
+      }
+    }
+
+    // Check that open and close values are within high-low range
+    if (openData != null && highData != null && lowData != null) {
+      for (int i = 0; i < openData.length; i++) {
+        if (openData[i] > highData[i] || openData[i] < lowData[i]) {
+          throw new IllegalArgumentException(
+              "Open value must be within High-Low range at index "
+                  + i
+                  + " for series "
+                  + seriesName);
+        }
+      }
+    }
+
+    if (closeData != null && highData != null && lowData != null) {
+      for (int i = 0; i < closeData.length; i++) {
+        if (closeData[i] > highData[i] || closeData[i] < lowData[i]) {
+          throw new IllegalArgumentException(
+              "Close value must be within High-Low range at index "
+                  + i
+                  + " for series "
+                  + seriesName);
+        }
+      }
+    }
+
     checkDataLengths(seriesName, "Open", "Close", openData, closeData);
     checkDataLengths(seriesName, "High", "Close", highData, closeData);
     checkDataLengths(seriesName, "Low", "Close", lowData, closeData);

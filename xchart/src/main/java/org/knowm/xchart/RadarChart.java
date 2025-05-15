@@ -86,8 +86,37 @@ public class RadarChart extends Chart<RadarStyler, RadarSeries> {
    * @return
    */
   public RadarSeries addSeries(String seriesName, double[] values) {
+    if (values == null) {
+      throw new IllegalArgumentException("Data array cannot be null for series: " + seriesName);
+    }
 
-    return addSeries(seriesName, values, null);
+    if (radiiLabels != null && values.length != radiiLabels.length) {
+      throw new IllegalArgumentException(
+          "Data length does not match the number of variables. Expected: "
+              + radiiLabels.length
+              + ", Got: "
+              + values.length);
+    }
+
+    // Check values are in valid range [0,1]
+    for (int i = 0; i < values.length; i++) {
+      if (values[i] < 0 || values[i] > 1) {
+        throw new IllegalArgumentException(
+            "Values must be in range [0,1]. Found invalid value " + values[i] + " at index " + i);
+      }
+    }
+
+    RadarSeries series = new RadarSeries(seriesName, values, null);
+
+    if (seriesMap.containsKey(seriesName)) {
+      throw new IllegalArgumentException(
+          "Series name >"
+              + seriesName
+              + "< has already been used. Use unique names for each series!!!");
+    }
+    seriesMap.put(seriesName, series);
+
+    return series;
   }
 
   /**

@@ -372,26 +372,30 @@ public class XYChart extends Chart<XYStyler, XYSeries> {
   // Internal Members and Methods ///////////////////
   ///////////////////////////////////////////////////
 
-  private void sanityCheck(String seriesName, double[] xData, double[] yData, double[] errorBars) {
+  private void checkData(String seriesName, String dataType, double[] data) {
+    if (data == null) {
+      throw new IllegalArgumentException(dataType + " data cannot be null!!!");
+    }
+    for (double d : data) {
+      if (Double.isNaN(d)) {
+        throw new IllegalArgumentException(
+            "Data series " + seriesName + " contains NaN value(s) which are not allowed.");
+      }
+    }
+  }
 
-    if (seriesMap.containsKey(seriesName)) {
-      throw new IllegalArgumentException(
-          "Series name >"
-              + seriesName
-              + "< has already been used. Use unique names for each series!!!");
+  private void sanityCheck(String seriesName, double[] xData, double[] yData, double[] errorBars) {
+    checkData(seriesName, "X-Axis", xData);
+    checkData(seriesName, "Y-Axis", yData);
+    if (errorBars != null) {
+      checkData(seriesName, "Error Bars", errorBars);
     }
-    if (yData == null) {
-      throw new IllegalArgumentException("Y-Axis data cannot be null!!! >" + seriesName);
-    }
-    if (yData.length == 0) {
-      throw new IllegalArgumentException("Y-Axis data cannot be empty!!! >" + seriesName);
-    }
-    if (xData != null && xData.length == 0) {
-      throw new IllegalArgumentException("X-Axis data cannot be empty!!! >" + seriesName);
+
+    if (xData.length != yData.length) {
+      throw new IllegalArgumentException("X and Y-Axis sizes are not the same!!!");
     }
     if (errorBars != null && errorBars.length != yData.length) {
-      throw new IllegalArgumentException(
-          "Error bars and Y-Axis sizes are not the same!!! >" + seriesName);
+      throw new IllegalArgumentException("Error bars and Y-Axis sizes are not the same!!!");
     }
   }
 

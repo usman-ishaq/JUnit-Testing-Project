@@ -71,6 +71,9 @@ public class PieChart extends Chart<PieStyler, PieSeries> {
    * @return
    */
   public PieSeries addSeries(String seriesName, Number value) {
+    if (value.doubleValue() < 0) {
+      throw new IllegalArgumentException("Pie chart values cannot be negative. Got: " + value);
+    }
 
     PieSeries series = new PieSeries(seriesName, value);
 
