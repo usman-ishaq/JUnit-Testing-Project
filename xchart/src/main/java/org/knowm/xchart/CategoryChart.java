@@ -280,7 +280,10 @@ public class CategoryChart extends Chart<CategoryStyler, CategorySeries> {
     if (yData.size() == 0) {
       throw new IllegalArgumentException("Y-Axis data cannot be empty!!!");
     }
-    if (xData != null && xData.size() == 0) {
+    if (xData == null) {
+      throw new IllegalArgumentException("X-Axis data cannot be null!!!");
+    }
+    if (xData.size() == 0) {
       throw new IllegalArgumentException("X-Axis data cannot be empty!!!");
     }
     if (errorBars != null && errorBars.size() != yData.size()) {
